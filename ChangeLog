@@ -1,0 +1,5 @@
+2005-06-21  Alexander Gottwald  <ago at freedesktop dot org>
+
+	* configure.ac
+	Add missing xext.pc and xextproto.pc
+
