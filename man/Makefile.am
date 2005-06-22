@@ -37,5 +37,5 @@ man_MANS = \
          DMXRemoveInput.3 \
          DMXRemoveScreen.3 \
          DMXSync.3
-EXTRA_DIST = $(man3_MANS)
+EXTRA_DIST = $(man_MANS)
 
