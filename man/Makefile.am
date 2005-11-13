@@ -19,23 +19,44 @@
 #  PERFORMANCE OF THIS SOFTWARE.
 #
 
-man_MANS = \
-         DMX.3 \
-         DMXAddInput.3 \
-         DMXAddScreen.3 \
-         DMXChangeDesktopAttributes.3 \
-         DMXChangeScreensAttributes.3 \
-         DMXForceWindowCreation.3 \
-         DMXGetDesktopAttributes.3 \
-         DMXGetInputAttributes.3 \
-         DMXGetInputCount.3 \
-         DMXGetScreenAttributes.3 \
-         DMXGetScreenCount.3 \
-         DMXGetWindowAttributes.3 \
-         DMXQueryExtension.3 \
-         DMXQueryVersion.3 \
-         DMXRemoveInput.3 \
-         DMXRemoveScreen.3 \
-         DMXSync.3
-EXTRA_DIST = $(man_MANS)
+libmandir = $(mandir)/man$(LIB_MAN_SUFFIX)
 
+libman_SOURCES = \
+         DMX.man \
+         DMXAddInput.man \
+         DMXAddScreen.man \
+         DMXChangeDesktopAttributes.man \
+         DMXChangeScreensAttributes.man \
+         DMXForceWindowCreation.man \
+         DMXGetDesktopAttributes.man \
+         DMXGetInputAttributes.man \
+         DMXGetInputCount.man \
+         DMXGetScreenAttributes.man \
+         DMXGetScreenCount.man \
+         DMXGetWindowAttributes.man \
+         DMXQueryExtension.man \
+         DMXQueryVersion.man \
+         DMXRemoveInput.man \
+         DMXRemoveScreen.man \
+         DMXSync.man
+
+libman_DATA = $(libman_SOURCES:man=@LIB_MAN_SUFFIX@)
+
+EXTRA_DIST = $(libman_SOURCES)
+
+CLEANFILES = $(libman_DATA)
+
+SED = sed
+
+# Strings to replace in man pages
+XORGRELSTRING = @PACKAGE_STRING@
+  XORGMANNAME = X Version 11
+
+MAN_SUBSTS = \
+	-e 's/__vendorversion__/"$(XORGRELSTRING)" "$(XORGMANNAME)"/' \
+	-e 's/__libmansuffix__/$(LIB_MAN_SUFFIX)/g' 
+
+SUFFIXES = .$(LIB_MAN_SUFFIX) .man
+
+.man.$(LIB_MAN_SUFFIX):
+	sed $(MAN_SUBSTS) < $< > $@

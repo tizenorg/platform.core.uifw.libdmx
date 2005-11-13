@@ -1,3 +1,10 @@
+2005-11-13  Alan Coopersmith  <alan.coopersmith@sun.com>
+
+	* configure.ac:
+	* man/Makefile.am: 
+	Use $(LIB_MAN_SUFFIX) instead of forcing man pages into section 3.
+	Use sed to substitute variables in man pages.
+
 2005-10-18  Kevin E. Martin  <kem-at-freedesktop-dot-org>
 
 	* configure.ac:
