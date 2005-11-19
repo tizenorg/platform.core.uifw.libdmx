@@ -6,6 +6,7 @@ includedir=@includedir@
 Name: dmx
 Description: The dmx Library
 Version: @PACKAGE_VERSION@
-Cflags: -I${includedir} @DMX_CFLAGS@
-Libs: -L${libdir} -ldmx @DMX_LIBS@
-
+Requires: dmxproto
+Requires.private: x11 xext
+Cflags: -I${includedir}
+Libs: -L${libdir} -ldmx
