@@ -21,7 +21,7 @@
 
 libmandir = $(LIB_MAN_DIR)
 
-libman_SOURCES = \
+libman_PRE = \
          DMX.man \
          DMXAddInput.man \
          DMXAddScreen.man \
@@ -40,9 +40,9 @@ libman_SOURCES = \
          DMXRemoveScreen.man \
          DMXSync.man
 
-libman_DATA = $(libman_SOURCES:man=@LIB_MAN_SUFFIX@)
+libman_DATA = $(libman_PRE:man=@LIB_MAN_SUFFIX@)
 
-EXTRA_DIST = $(libman_SOURCES)
+EXTRA_DIST = $(libman_PRE)
 
 CLEANFILES = $(libman_DATA)
 
