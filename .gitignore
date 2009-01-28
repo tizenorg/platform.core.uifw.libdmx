@@ -20,3 +20,8 @@ missing
 mkinstalldirs
 stamp-h1
 *~
+*.o
+DMX*.3
+libdmx-*.tar.*
+ChangeLog
+tags
