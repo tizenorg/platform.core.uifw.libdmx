@@ -38,7 +38,7 @@ AC_PROG_LIBTOOL
 XORG_CWARNFLAGS
 
 # Check for dependencies
-PKG_CHECK_MODULES(DMX, x11 xext xextproto dmxproto)
+PKG_CHECK_MODULES(DMX, x11 xext xextproto [dmxproto >= 2.2.99.1])
 DMX_CFLAGS="$CWARNFLAGS $DMX_CFLAGS"
 AC_SUBST(DMX_CFLAGS)
 AC_SUBST(DMX_LIBS)
