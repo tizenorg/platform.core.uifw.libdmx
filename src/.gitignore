@@ -1,6 +1,0 @@
-.deps
-libdmx.la
-.libs
-*.lo
-Makefile
-Makefile.in
