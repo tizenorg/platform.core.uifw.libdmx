@@ -28,9 +28,12 @@ EXTRA_DIST = dmx.pc.in
 
 
 
-.PHONY: ChangeLog
+.PHONY: ChangeLog INSTALL
+
+INSTALL:
+	$(INSTALL_CMD)
 
 ChangeLog:
 	$(CHANGELOG_CMD)
 
-dist-hook: ChangeLog
+dist-hook: ChangeLog INSTALL
