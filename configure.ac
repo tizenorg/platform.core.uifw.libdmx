@@ -21,7 +21,7 @@ dnl  PERFORMANCE OF THIS SOFTWARE.
 dnl
 dnl Process this file with autoconf to create configure.
 
-AC_PREREQ([2.57])
+AC_PREREQ([2.60])
 
 AC_INIT(libdmx, 1.1.0, [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], libdmx)
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
