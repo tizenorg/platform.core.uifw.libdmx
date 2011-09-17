@@ -74,7 +74,7 @@ For local devices, all other fields returned, except
 .I isCore " and " sendsCore ,
 are invalid.
 .PP
-For console devices, 
+For console devices,
 .I physicalScreen " and " physicalID
 will be invalid, and
 .I name
