@@ -76,7 +76,7 @@ static /* const */ XExtensionHooks dmx_extension_hooks = {
 };
 
 static XEXT_GENERATE_FIND_DISPLAY(find_display, dmx_extension_info,
-                                  (char *)dmx_extension_name,
+                                  dmx_extension_name,
                                   &dmx_extension_hooks,
                                   0, NULL)
 
