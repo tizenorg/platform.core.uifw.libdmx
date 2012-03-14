@@ -6,7 +6,7 @@ Release:    1
 Group:      System/Libraries
 License:    MIT/X11
 URL:        http://www.x.org
-Source0:    ftp://ftp.x.org/pub/individual/lib/%{name}-%{version}.tar.bz2
+Source0:    ftp://ftp.x.org/pub/individual/lib/%{name}-%{version}.tar.gz
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 BuildRequires:  pkgconfig(xproto)
@@ -16,6 +16,7 @@ BuildRequires:  pkgconfig(xau)
 BuildRequires:  pkgconfig(xextproto)
 BuildRequires:  pkgconfig(dmxproto)
 BuildRequires:  pkgconfig
+BuildRequires:  pkgconfig(xorg-macros)
 
 
 %description
@@ -37,6 +38,7 @@ libdmx development package
 
 %build
 
+sh ./autogen.sh
 %configure --disable-static
 make %{?jobs:-j%jobs}
 
