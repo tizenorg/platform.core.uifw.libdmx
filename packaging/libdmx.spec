@@ -9,6 +9,7 @@ URL:        http://www.x.org
 Source0:    ftp://ftp.x.org/pub/individual/lib/%{name}-%{version}.tar.gz
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
+BuildRequires:  pkgconfig(xorg-macros)
 BuildRequires:  pkgconfig(xproto)
 BuildRequires:  pkgconfig(x11)
 BuildRequires:  pkgconfig(xext)
@@ -16,7 +17,6 @@ BuildRequires:  pkgconfig(xau)
 BuildRequires:  pkgconfig(xextproto)
 BuildRequires:  pkgconfig(dmxproto)
 BuildRequires:  pkgconfig
-BuildRequires:  pkgconfig(xorg-macros)
 
 
 %description
@@ -38,8 +38,7 @@ libdmx development package
 
 %build
 
-sh ./autogen.sh
-%configure --disable-static
+%reconfigure --disable-static
 make %{?jobs:-j%jobs}
 
 %install
