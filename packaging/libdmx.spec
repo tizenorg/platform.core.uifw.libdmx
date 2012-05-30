@@ -7,6 +7,7 @@ Group:      System/Libraries
 License:    MIT/X11
 URL:        http://www.x.org
 Source0:    ftp://ftp.x.org/pub/individual/lib/%{name}-%{version}.tar.gz
+Source1001: packaging/libdmx.manifest 
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 BuildRequires:  pkgconfig(xorg-macros)
@@ -37,6 +38,7 @@ libdmx development package
 
 
 %build
+cp %{SOURCE1001} .
 
 %reconfigure --disable-static
 make %{?jobs:-j%jobs}
@@ -57,6 +59,7 @@ rm -rf %{buildroot}
 
 
 %files
+%manifest libdmx.manifest
 %defattr(-,root,root,-)
 %doc COPYING README ChangeLog
 %{_libdir}/libdmx.so.1
@@ -64,6 +67,7 @@ rm -rf %{buildroot}
 
 
 %files devel
+%manifest libdmx.manifest
 %defattr(-,root,root,-)
 %{_libdir}/libdmx.so
 %{_libdir}/pkgconfig/dmx.pc
