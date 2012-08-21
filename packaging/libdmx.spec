@@ -1,72 +1,61 @@
+Summary: X.Org X11 DMX runtime library
+Name: libdmx
+Version: 1.1.2
+Release: 1
+License: MIT
+Group: System Environment/Libraries
+URL: http://www.x.org
 
-Name:       libdmx
-Summary:    X.Org X11 libdmx runtime library
-Version:    1.1.1
-Release:    1
-Group:      System/Libraries
-License:    MIT/X11
-URL:        http://www.x.org
-Source0:    ftp://ftp.x.org/pub/individual/lib/%{name}-%{version}.tar.gz
-Requires(post): /sbin/ldconfig
-Requires(postun): /sbin/ldconfig
-BuildRequires:  pkgconfig(xorg-macros)
-BuildRequires:  pkgconfig(xproto)
-BuildRequires:  pkgconfig(x11)
-BuildRequires:  pkgconfig(xext)
-BuildRequires:  pkgconfig(xau)
-BuildRequires:  pkgconfig(xextproto)
-BuildRequires:  pkgconfig(dmxproto)
-BuildRequires:  pkgconfig
+Source0: %{name}-%{version}.tar.gz
 
+BuildRequires: pkgconfig(xorg-macros)
+BuildRequires: pkgconfig(dmxproto)
+BuildRequires: pkgconfig(xext)
 
 %description
-libdmx runtime library
-
+The X.Org X11 DMX (Distributed Multihead X) runtime library.
 
 %package devel
-Summary:    X.Org X11 libdmx development package
-Group:      Development/Libraries
-Requires:   %{name} = %{version}-%{release}
+Summary: X.Org X11 DMX development files
+Group: Development/Libraries
+Requires: %{name} = %{version}-%{release}
 
 %description devel
-libdmx development package
-
+The X.Org X11 DMX (Distributed Multihead X) development files.
 
 %prep
-%setup -q -n %{name}-%{version}
-
+%setup -q
 
 %build
-
-%reconfigure --disable-static
+%reconfigure --disable-static \
+           LDFLAGS="${LDFLAGS} -Wl,--hash-style=both -Wl,--as-needed"
 make %{?jobs:-j%jobs}
 
 %install
-rm -rf %{buildroot}
-%make_install
+rm -rf $RPM_BUILD_ROOT
 
+make install DESTDIR=$RPM_BUILD_ROOT
 
+# We intentionally don't ship *.la files
+rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 
+%remove_docs
+
+%clean
+rm -rf $RPM_BUILD_ROOT
 
 %post -p /sbin/ldconfig
-
 %postun -p /sbin/ldconfig
-
-
-
-
 
 %files
 %defattr(-,root,root,-)
-%doc COPYING README ChangeLog
+%doc COPYING ChangeLog
 %{_libdir}/libdmx.so.1
 %{_libdir}/libdmx.so.1.0.0
-
 
 %files devel
 %defattr(-,root,root,-)
 %{_libdir}/libdmx.so
 %{_libdir}/pkgconfig/dmx.pc
-%{_mandir}/man3/*.3*
+#%{_mandir}/man3/*.3*
 %{_includedir}/X11/extensions/dmxext.h
-

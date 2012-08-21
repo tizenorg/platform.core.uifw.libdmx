@@ -1,6 +1,0 @@
-usr/share/man/*
-usr/lib/libdmx.a
-usr/lib/libdmx.la
-usr/lib/libdmx.so
-usr/lib/pkgconfig/dmx.pc
-usr/include
