@@ -250,6 +250,7 @@ Bool DMXGetScreenAttributes(Display *dpy, int physical_screen,
     XExtDisplayInfo              *info = find_display(dpy);
     xDMXGetScreenAttributesReply rep;
     xDMXGetScreenAttributesReq   *req;
+    Bool                          ret = False;
 
     DMXCheckExtension(dpy, info, False);
 
@@ -264,7 +265,15 @@ Bool DMXGetScreenAttributes(Display *dpy, int physical_screen,
         SyncHandle();
         return False;
     }
-    attr->displayName  = Xmalloc(rep.displayNameLength + 1 + 4 /* for pad */);
+
+    if (rep.displayNameLength < 1024)
+        attr->displayName = Xmalloc(rep.displayNameLength + 1 + 4 /* for pad */);
+    else
+        attr->displayName = NULL;  /* name length is unbelievable, reject */
+    if (attr->displayName == NULL) {
+        _XEatDataWords(dpy, rep.length);
+        goto end;
+    }
     _XReadPad(dpy, attr->displayName, rep.displayNameLength);
     attr->displayName[rep.displayNameLength] = '\0';
     attr->logicalScreen       = rep.logicalScreen;
@@ -280,9 +289,13 @@ Bool DMXGetScreenAttributes(Display *dpy, int physical_screen,
     attr->rootWindowYoffset   = rep.rootWindowYoffset;
     attr->rootWindowXorigin   = rep.rootWindowXorigin;
     attr->rootWindowYorigin   = rep.rootWindowYorigin;
+
+    ret = True;
+
+  end:
     UnlockDisplay(dpy);
     SyncHandle();
-    return True;
+    return ret;
 }
 
 static CARD32 _DMXGetScreenAttribute(int bit, DMXScreenAttributes *attr)
