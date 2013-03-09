@@ -524,6 +524,7 @@ Bool DMXGetWindowAttributes(Display *dpy, Window window,
     CARD32                       *windows; /* Must match protocol size */
     XRectangle                   *pos;     /* Must match protocol size */
     XRectangle                   *vis;     /* Must match protocol size */
+    Bool                          ret = False;
 
     DMXCheckExtension(dpy, info, False);
 
@@ -538,11 +539,30 @@ Bool DMXGetWindowAttributes(Display *dpy, Window window,
         return False;
     }
 
-                                /* FIXME: check for NULL? */
-    screens    = Xmalloc(rep.screenCount * sizeof(*screens));
-    windows    = Xmalloc(rep.screenCount * sizeof(*windows));
-    pos        = Xmalloc(rep.screenCount * sizeof(*pos));
-    vis        = Xmalloc(rep.screenCount * sizeof(*vis));
+    /*
+     * rep.screenCount is a CARD32 so could be as large as 2^32
+     * The X11 protocol limits the total screen size to 64k x 64k,
+     * and no screen can be smaller than a pixel.  While technically
+     * that means we could theoretically reach 2^32 screens, and that's
+     * not even taking overlap into account, 64k seems far larger than
+     * any reasonable configuration, so we limit to that to prevent both
+     * integer overflow in the size calculations, and bad X server
+     * responses causing massive memory allocation.
+     */
+    if (rep.screenCount < 65536) {
+        screens    = Xmalloc(rep.screenCount * sizeof(*screens));
+        windows    = Xmalloc(rep.screenCount * sizeof(*windows));
+        pos        = Xmalloc(rep.screenCount * sizeof(*pos));
+        vis        = Xmalloc(rep.screenCount * sizeof(*vis));
+    } else {
+        screens = windows = NULL;
+        pos = vis = NULL;
+    }
+
+    if (!screens || !windows || !pos || !vis) {
+        _XEatDataWords(dpy, rep.length);
+        goto end;
+    }
 
     _XRead(dpy, (char *)screens, rep.screenCount * sizeof(*screens));
     _XRead(dpy, (char *)windows, rep.screenCount * sizeof(*windows));
@@ -558,7 +578,9 @@ Bool DMXGetWindowAttributes(Display *dpy, Window window,
         inf->pos       = pos[current];
         inf->vis       = vis[current];
     }
+    ret = True;
 
+  end:
     Xfree(vis);
     Xfree(pos);
     Xfree(windows);
@@ -566,7 +588,7 @@ Bool DMXGetWindowAttributes(Display *dpy, Window window,
 
     UnlockDisplay(dpy);
     SyncHandle();
-    return True;
+    return ret;
 }
 
 /** If the DMXGetDesktopAttributes protocol request returns information
