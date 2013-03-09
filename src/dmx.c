@@ -723,6 +723,7 @@ Bool DMXGetInputAttributes(Display *dpy, int id, DMXInputAttributes *inf)
     xDMXGetInputAttributesReply rep;
     xDMXGetInputAttributesReq   *req;
     char                        *buffer;
+    Bool                         ret = False;
 
     DMXCheckExtension(dpy, info, False);
 
@@ -737,6 +738,16 @@ Bool DMXGetInputAttributes(Display *dpy, int id, DMXInputAttributes *inf)
         return False;
     }
 
+    if (rep.nameLength < 1024)
+        buffer      = Xmalloc(rep.nameLength + 1 + 4 /* for pad */);
+    else
+        buffer      = NULL;  /* name length is unbelievable, reject */
+
+    if (buffer == NULL) {
+        _XEatDataWords(dpy, rep.length);
+        goto end;
+    }
+
     switch (rep.inputType) {
     case 0: inf->inputType = DMXLocalInputType;   break;
     case 1: inf->inputType = DMXConsoleInputType; break;
@@ -748,13 +759,14 @@ Bool DMXGetInputAttributes(Display *dpy, int id, DMXInputAttributes *inf)
     inf->isCore         = rep.isCore;
     inf->sendsCore      = rep.sendsCore;
     inf->detached       = rep.detached;
-    buffer              = Xmalloc(rep.nameLength + 1 + 4 /* for pad */);
     _XReadPad(dpy, buffer, rep.nameLength);
     buffer[rep.nameLength] = '\0';
     inf->name           = buffer;
+    ret = True;
+  end:
     UnlockDisplay(dpy);
     SyncHandle();
-    return True;
+    return ret;
 }
 
 /** Add input. */
