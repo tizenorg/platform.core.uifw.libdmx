@@ -38,12 +38,16 @@
  * can be included in client applications by linking with the libdmx.a
  * library. */
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
 #include <X11/Xlibint.h>
 #include <X11/extensions/Xext.h>
 #define EXTENSION_PROC_ARGS void *
 #include <X11/extensions/extutil.h>
 #include <X11/extensions/dmxproto.h>
 #include <X11/extensions/dmxext.h>
+#include <limits.h>
 
 static XExtensionInfo dmx_extension_info_data;
 static XExtensionInfo *dmx_extension_info = &dmx_extension_info_data;
@@ -81,6 +85,19 @@ static XEXT_GENERATE_FIND_DISPLAY(find_display, dmx_extension_info,
                                   0, NULL)
 
 static XEXT_GENERATE_CLOSE_DISPLAY(close_display, dmx_extension_info)
+
+#ifndef HAVE__XEATDATAWORDS
+#include <X11/Xmd.h>  /* for LONG64 on 64-bit platforms */
+
+static inline void _XEatDataWords(Display *dpy, unsigned long n)
+{
+# ifndef LONG64
+    if (n >= (ULONG_MAX >> 2))
+        _XIOError(dpy);
+# endif
+    _XEatData (dpy, n << 2);
+}
+#endif
 
 
 /*****************************************************************************
