@@ -7,6 +7,7 @@ Group: System Environment/Libraries
 URL: http://www.x.org
 
 Source0: %{name}-%{version}.tar.gz
+Source1001: 	libdmx.manifest
 
 BuildRequires: pkgconfig(xorg-macros)
 BuildRequires: pkgconfig(dmxproto)
@@ -25,6 +26,7 @@ The X.Org X11 DMX (Distributed Multihead X) development files.
 
 %prep
 %setup -q
+cp %{SOURCE1001} .
 
 %build
 %reconfigure --disable-static \
@@ -50,6 +52,7 @@ rm -rf $RPM_BUILD_ROOT
 %postun -p /sbin/ldconfig
 
 %files
+%manifest %{name}.manifest
 %defattr(-,root,root,-)
 /usr/share/license/%{name}
 #%doc COPYING ChangeLog
@@ -57,6 +60,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libdmx.so.1.0.0
 
 %files devel
+%manifest %{name}.manifest
 %defattr(-,root,root,-)
 %{_libdir}/libdmx.so
 %{_libdir}/pkgconfig/dmx.pc
