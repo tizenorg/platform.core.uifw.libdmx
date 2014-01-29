@@ -1,3 +1,5 @@
+%bcond_with x
+
 Summary: X.Org X11 DMX runtime library
 Name: libdmx
 Version: 1.1.2
@@ -12,6 +14,10 @@ Source1001: 	libdmx.manifest
 BuildRequires: pkgconfig(xorg-macros)
 BuildRequires: pkgconfig(dmxproto)
 BuildRequires: pkgconfig(xext)
+
+%if !%{with x}
+ExclusiveArch:
+%endif
 
 %description
 The X.Org X11 DMX (Distributed Multihead X) runtime library.
