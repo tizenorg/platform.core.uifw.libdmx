@@ -2,7 +2,7 @@
 
 Summary: X.Org X11 DMX runtime library
 Name: libdmx
-Version: 1.1.2
+Version: 1.1.3
 Release: 1
 License: MIT
 Group: System Environment/Libraries
@@ -35,7 +35,7 @@ The X.Org X11 DMX (Distributed Multihead X) development files.
 cp %{SOURCE1001} .
 
 %build
-%reconfigure --disable-static \
+%autogen --disable-static \
            LDFLAGS="${LDFLAGS} -Wl,--hash-style=both -Wl,--as-needed"
 make %{?jobs:-j%jobs}
 
